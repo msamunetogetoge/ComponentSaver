@@ -5,29 +5,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Component List and Registration</title>
+    <!-- Material Design for Bootstrap 5 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <!-- Material Design for Bootstrap JS -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
 </head>
 
 <body>
-    <h1>Component List</h1>
-    <ul>
-        {% for component in components %}
-        <li>{{ component.name }}: {{ component.description }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container my-5">
+        <h1>Component List</h1>
+        <ul class="list-group">
+            {% for component in components %}
+            <li class="list-group-item">{{ component.name }}: {{ component.description }}</li>
+            {% endfor %}
+        </ul>
 
-    <h1>Register a new component</h1>
-    <form action="/register_component" method="post" enctype="multipart/form-data">
-        <label for="name">Component Name:</label>
-        <input type="text" id="name" name="name" required><br><br>
+        <h1 class="my-5">Register a new component</h1>
+        <form action="/register_component" method="post" enctype="multipart/form-data">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Component Name" required>
+                <label for="name">Component Name</label>
+            </div>
 
-        <label for="description">Component Description:</label>
-        <input type="text" id="description" name="description" required><br><br>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="description" name="description"
+                    placeholder="Component Description" required>
+                <label for="description">Component Description</label>
+            </div>
 
-        <label for="file">Select Vue component file (.vue):</label>
-        <input type="file" id="file" name="file" accept=".vue" required><br><br>
+            <div class="mb-3">
+                <label for="file" class="form-label">Select Vue component file (.vue)</label>
+                <input type="file" class="form-control" id="file" name="file" accept=".vue" required>
+            </div>
 
-        <input type="submit" value="Submit">
-    </form>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 </body>
 
 </html>
