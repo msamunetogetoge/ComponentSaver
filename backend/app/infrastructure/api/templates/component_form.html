@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component List and Registration</title>
+</head>
+
+<body>
+    <h1>Component List</h1>
+    <ul>
+        {% for component in components %}
+        <li>{{ component.name }}: {{ component.description }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>Register a new component</h1>
+    <form action="/register_component" method="post" enctype="multipart/form-data">
+        <label for="name">Component Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="description">Component Description:</label>
+        <input type="text" id="description" name="description" required><br><br>
+
+        <label for="file">Select Vue component file (.vue):</label>
+        <input type="file" id="file" name="file" accept=".vue" required><br><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+</html>
