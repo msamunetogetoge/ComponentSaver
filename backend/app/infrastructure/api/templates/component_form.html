@@ -20,21 +20,21 @@
         <h1>Component List</h1>
         <ul class="list-group">
             {% for component in components %}
-            <li class="list-group-item">{{ component.name }}: {{ component.description }}</li>
+            <li class="list-group-item">{{ component.name }}: {{ component.document }}</li>
             {% endfor %}
         </ul>
 
         <h1 class="my-5">Register a new component</h1>
         <form action="/register_component" method="post" enctype="multipart/form-data">
-            <div class="form-floating mb-3">
+            <!-- <div class="form-floating mb-3">
                 <input type="text" class="form-control" id="name" name="name" placeholder="Component Name" required>
                 <label for="name">Component Name</label>
-            </div>
+            </div> -->
 
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="description" name="description"
+                <input type="text" class="form-control" id="document" name="document"
                     placeholder="Component Description" required>
-                <label for="description">Component Description</label>
+                <label for="document">Component Description</label>
             </div>
 
             <div class="mb-3">
