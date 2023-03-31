@@ -1,28 +1,30 @@
-<!-- <template>
-  <div>
-    <NuxtWelcome />
-  </div>
-</template> -->
 <template>
   <div>
-    <component :is="dynamicComponent" />
+    <component :is="dynamicComponent" v-if="dynamicComponent" />
   </div>
 </template>
 
-<script>
-export default {
-  data() {
+<script lang="ts">
+import { defineComponent, ref, onMounted } from 'vue';
+
+export default defineComponent({
+  name: 'DynamicComponentLoader',
+  setup() {
+    const dynamicComponent = ref(null);
+
+    onMounted(async () => {
+      // サーバーからVueファイルの内容を取得
+      const response = await fetch('/components/your_component_name');
+      const componentData = await response.json();
+
+      // 取得したコードをVueコンポーネントとして登録
+      const componentCode = componentData.component_content;
+      dynamicComponent.value = new Function('return ' + componentCode)();
+    });
+
     return {
-      dynamicComponent: null,
+      dynamicComponent,
     };
   },
-  async mounted() {
-    // サーバーからVueファイルの内容を取得
-    const response = await this.$axios.get("/components/your_component_name");
-    const componentCode = response.data;
-
-    // 取得したコードをVueコンポーネントとして登録
-    this.dynamicComponent = new Function("return " + componentCode)();
-  },
-};
+});
 </script>
