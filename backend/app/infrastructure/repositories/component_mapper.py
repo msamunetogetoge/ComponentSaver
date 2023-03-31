@@ -1,5 +1,5 @@
 from app.domain.entities.component import Component
-from app.infrastructure.models.component_model import ComponentModel
+from app.infrastructure.models.component import ComponentModel
 from app.infrastructure.persistence.components.storage import create_local_file_path
 
 

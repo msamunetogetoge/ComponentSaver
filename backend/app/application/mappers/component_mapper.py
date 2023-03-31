@@ -1,5 +1,5 @@
 from app.domain.entities.component import Component
-from app.application.models.component_upload_model import ComponentUpload
+from app.application.models.component_upload import ComponentUpload
 
 
 def map_component_upload_to_component(component_upload: ComponentUpload) -> Component:

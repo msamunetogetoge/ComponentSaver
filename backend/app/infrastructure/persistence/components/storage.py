@@ -11,7 +11,7 @@ def create_local_file_path(component_name: str) -> str:
     Returns:
         str: app/infrastructure/persistence/components/hoge.vue など
     """
-    base_path = "app/infrastructure/persistence/components"
+    base_path = "app/infrastructure/persistence/components/files"
     return os.path.join(base_path, component_name)
 
 

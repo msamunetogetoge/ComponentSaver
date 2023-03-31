@@ -5,12 +5,12 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from werkzeug.utils import secure_filename
 
-from app.application.models.component_upload_model import ComponentUpload
+from app.application.models.component_upload import ComponentUpload
 from app.application.models.view_model import ComponentView
+from app.application.services.component_service import ComponentService
 
+from app.infrastructure.database import init_db
 from app.infrastructure.repositories.component_repository_db import ComponentRepositoryDB as Repository
-from app.infrastructure.repositories.component_mapper import ComponentMapper
-from app.infrastructure.repositories.component_view_mapper import ComponentViewMapper
 
 
 app = Flask(__name__, template_folder='app/infrastructure/api/templates')
@@ -26,6 +26,7 @@ test_components: List[ComponentView] = [
     ComponentView(id=1, name="test_2",
                   document="test component_2")
 ]
+component_service = ComponentService(repo)
 
 
 @app.route("/")
@@ -35,10 +36,8 @@ def component_list():
     Returns:
         _type_: _description_
     """
-    components = test_components
-    components = repo.list()
-    components = [ComponentViewMapper.to_view(
-        ComponentMapper.to_model(component)) for component in components]
+    # components = test_components
+    components = component_service.get_all_comoponents()
     return render_template("component_form.html", components=components)
 
 
@@ -56,25 +55,15 @@ def register_component():
     # test_components にデータを追加する
     if file and file.filename:
         file_name = secure_filename(file.filename)
-        component_from_flask = file.read().decode('utf-8')
-        max_number = max([component.id for component in test_components])
-        new_id = max_number + 1
-        new_component_view = ComponentView(
-            id=new_id, name=file_name, document=document)
-
-        test_components.append(new_component_view)
-
-        new_component: ComponentUpload = ComponentUpload(
+        component_upload = ComponentUpload(
             file_name=file_name, file=file, document=document)
-        new_component.save_file()
-        new_component.createComponentEntity
+        # データをデータベースやファイルに保存する処理
+        component_service.save_component(component_upload=component_upload)
 
-    # ファイルとその他のデータをデータベースに保存する処理を実装する（省略）
-
-    # todo: ComponentUpload.save
     # コンポーネントのリストページにリダイレクト
     return redirect(url_for('component_list'))
 
 
 if __name__ == '__main__':
+    init_db()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)), debug=True)

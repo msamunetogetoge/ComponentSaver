@@ -1,8 +1,5 @@
-
 from dataclasses import dataclass
 from werkzeug.datastructures import FileStorage
-
-from app.domain.entities.component import Component
 
 
 @dataclass
