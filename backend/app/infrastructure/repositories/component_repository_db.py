@@ -3,7 +3,8 @@ from typing import List, Optional
 from app.domain.entities.component import Component
 from app.domain.repositories.component_repository import ComponentRepository
 
-from app.infrastructure.repositories.component_mapper import ComponentMapper
+from app.application.mappers.component_mapper import ComponentMapper
+
 from app.infrastructure.database import SessionLocal
 from app.infrastructure.models.component import ComponentModel
 from app.infrastructure.persistence.components.storage import create_local_file_path

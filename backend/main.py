@@ -15,9 +15,6 @@ from app.infrastructure.repositories.component_repository_db import ComponentRep
 
 app = Flask(__name__, template_folder='app/infrastructure/api/templates')
 
-# UPLOAD_FOLDER = "app/infrastructure/persistence/components"
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 repo = Repository()
 test_components: List[ComponentView] = [
@@ -36,7 +33,6 @@ def component_list():
     Returns:
         _type_: _description_
     """
-    # components = test_components
     components = component_service.get_all_comoponents()
     return render_template("component_form.html", components=components)
 
@@ -62,6 +58,31 @@ def register_component():
 
     # コンポーネントのリストページにリダイレクト
     return redirect(url_for('component_list'))
+
+
+@app.route("/components/<component_id>")
+def get_component(component_id: int):
+    """Componentを取得して、ComponentModelに詰めて渡す
+
+    Args:
+        component_id (int): ComponentModel.id = ComponentView.id
+
+    Returns:
+        _type_: _description_
+    """
+    # component_nameに対応するComponentを取得
+    component = component_service.get_by_id(component_id)
+
+    # エラーハンドリング（コンポーネントが見つからない場合）
+    if component is None:
+        return {"error": "Component not found"}, 404
+
+    # Vueファイルの内容を含むComponentモデルをJSONとして返す
+    return {
+        "name": component.name,
+        "document": component.document,
+        "component_content": component.component_content,
+    }
 
 
 if __name__ == '__main__':
