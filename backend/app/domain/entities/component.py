@@ -6,7 +6,6 @@ class Component:
     """
     vueやreactのコンポーネントとドキュメントを格納するモデル
     """
-    id: int
     name: str
     document: str
-    component: str = ""
+    component_content: str = ""

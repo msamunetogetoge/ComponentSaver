@@ -1,23 +1,31 @@
-from flask import Flask, render_template, request, redirect, url_for
 import os
+from typing import List
+
+from flask import Flask, render_template, request, redirect, url_for
 
 from werkzeug.utils import secure_filename
 
-from app.domain.repositories.component_repository import ComponentRepositoryInMemory as Reository
-from app.domain.entities.component import Component
+from app.application.models.component_upload_model import ComponentUpload
+from app.application.models.view_model import ComponentView
+
+from app.infrastructure.repositories.component_repository_db import ComponentRepositoryDB as Repository
+from app.infrastructure.repositories.component_mapper import ComponentMapper
+from app.infrastructure.repositories.component_view_mapper import ComponentViewMapper
 
 
 app = Flask(__name__, template_folder='app/infrastructure/api/templates')
 
-repo = Reository()
-test_components = [
-    Component(id=0, component="", name="test_1",
-              document="test component_1"),
-    Component(id=1, component="", name="test_2",
-              document="test component_2")
+# UPLOAD_FOLDER = "app/infrastructure/persistence/components"
+# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+repo = Repository()
+test_components: List[ComponentView] = [
+    ComponentView(id=0, name="test_1",
+                  document="test component_1"),
+    ComponentView(id=1, name="test_2",
+                  document="test component_2")
 ]
-for component in test_components:
-    repo.add(component=component)
 
 
 @app.route("/")
@@ -27,7 +35,10 @@ def component_list():
     Returns:
         _type_: _description_
     """
+    components = test_components
     components = repo.list()
+    components = [ComponentViewMapper.to_view(
+        ComponentMapper.to_model(component)) for component in components]
     return render_template("component_form.html", components=components)
 
 
@@ -42,17 +53,25 @@ def register_component():
 
     document = request.form.get('document', "")
     file = request.files.get('file')
+    # test_components にデータを追加する
     if file and file.filename:
         file_name = secure_filename(file.filename)
-        component_from_flask = file.read()
-        max_number = max([component.id for component in repo.list()])
-        new_component = Component(
-            id=max_number+1, name=file_name, document=document, component=component_from_flask)
-        repo.add(new_component)
+        component_from_flask = file.read().decode('utf-8')
+        max_number = max([component.id for component in test_components])
+        new_id = max_number + 1
+        new_component_view = ComponentView(
+            id=new_id, name=file_name, document=document)
 
-    # file.save(os.path.join(app.config['UPLOAD_FOLDER'], file_name))
+        test_components.append(new_component_view)
+
+        new_component: ComponentUpload = ComponentUpload(
+            file_name=file_name, file=file, document=document)
+        new_component.save_file()
+        new_component.createComponentEntity
+
     # ファイルとその他のデータをデータベースに保存する処理を実装する（省略）
 
+    # todo: ComponentUpload.save
     # コンポーネントのリストページにリダイレクト
     return redirect(url_for('component_list'))
 

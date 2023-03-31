@@ -44,7 +44,7 @@ class ComponentRepositoryInMemory(ComponentRepository):
     def update(self, component_id: int, component_data: Component) -> Optional[Component]:
         component = self.get(component_id)
         if component:
-            component.component = component_data.component
+            component.component_content = component_data.component_content
             component.document = component_data.document
             return component
         return None
