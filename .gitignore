@@ -6,6 +6,8 @@ __pycache__/
 # C extensions
 *.so
 
+# ローカルのアップロードされたファイル置き場
+*files/
 # Distribution / packaging
 .Python
 build/
