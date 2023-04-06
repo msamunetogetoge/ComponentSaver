@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 
 
 # 実際のデータベースURLに変更してください
-DATABASE_URL = ""
+DATABASE_URL = "postgresql://kenjiii534:v2_42dtQ_MnEA9KAM57LaF23FmVJGDzE@db.bit.io:5432/kenjiii534/components"
 
 engine = create_engine(DATABASE_URL, isolation_level="AUTOCOMMIT")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

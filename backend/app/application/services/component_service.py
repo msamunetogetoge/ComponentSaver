@@ -63,3 +63,14 @@ class ComponentService:
             Component | None: 存在すればComponent
         """
         return self.component_repository.get(component_id=component_id)
+
+    def get_by_name(self, componment_name: str) -> Component | None:
+        """Componentモデルを、nameから検索する
+
+        Args:
+            componment_name (str): _description_
+
+        Returns:
+            Component | None: _description_
+        """
+        return self.component_repository.get_by_name(component_name=componment_name)

@@ -20,7 +20,10 @@
         <h1>Component List</h1>
         <ul class="list-group">
             {% for component in components %}
-            <li class="list-group-item">{{ component.name }}: {{ component.document }}</li>
+            <li class="list-group-item" style="cursor: pointer;"
+                onclick="window.location.href='http://localhost:3000/components/{{ component.name }}'">
+                {{ component.name }}: {{ component.document }}
+            </li>
             {% endfor %}
         </ul>
 

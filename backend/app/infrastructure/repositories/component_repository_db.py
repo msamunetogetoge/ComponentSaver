@@ -38,8 +38,25 @@ class ComponentRepositoryDB(ComponentRepository):
         session = SessionLocal()
         try:
             component = session.query(ComponentModel).filter(
-                ComponentModel.id == component_id).one_or_none()
+                ComponentModel.id == component_id).one()
+            component = ComponentMapper.to_entity(component_model=component)
             return component
+        except Exception as e:
+            print(e)
+            return None
+        finally:
+            session.close()
+
+    def get_by_name(self, component_name: str) -> Optional[Component]:
+        session = SessionLocal()
+        try:
+            component = session.query(ComponentModel).filter(
+                ComponentModel.name == component_name).one()
+            component = ComponentMapper.to_entity(component_model=component)
+            return component
+        except Exception as e:
+            print(e)
+            return None
         finally:
             session.close()
 

@@ -2,6 +2,7 @@ import os
 from typing import List
 
 from flask import Flask, render_template, request, redirect, url_for
+from flask_cors import CORS
 
 from werkzeug.utils import secure_filename
 
@@ -14,7 +15,7 @@ from app.infrastructure.repositories.component_repository_db import ComponentRep
 
 
 app = Flask(__name__, template_folder='app/infrastructure/api/templates')
-
+CORS(app)
 
 repo = Repository()
 test_components: List[ComponentView] = [
@@ -60,8 +61,8 @@ def register_component():
     return redirect(url_for('component_list'))
 
 
-@app.route("/components/<component_id>")
-def get_component(component_id: int):
+@app.route("/components/<component_name>")
+def get_component(component_name: str):
     """Componentを取得して、ComponentModelに詰めて渡す
 
     Args:
@@ -71,7 +72,7 @@ def get_component(component_id: int):
         _type_: _description_
     """
     # component_nameに対応するComponentを取得
-    component = component_service.get_by_id(component_id)
+    component = component_service.get_by_name(component_name)
 
     # エラーハンドリング（コンポーネントが見つからない場合）
     if component is None:
@@ -81,8 +82,9 @@ def get_component(component_id: int):
     return {
         "name": component.name,
         "document": component.document,
-        "component_content": component.component_content,
+        "component_content": component.component_content
     }
+    # return render_template("detail.html", component=component)
 
 
 if __name__ == '__main__':

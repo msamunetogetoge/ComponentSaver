@@ -1,7 +1,10 @@
+import re
+
 from app.infrastructure.persistence.components.storage import create_local_file_path
 from app.infrastructure.models.component import ComponentModel
 from app.domain.entities.component import Component
 from app.application.models.component_upload import ComponentUpload
+from app.application.models.component_detail import ComponentDetailVue
 
 
 def map_component_upload_to_component(component_upload: ComponentUpload) -> Component:
@@ -64,3 +67,28 @@ class ComponentMapper:
             file_path=create_local_file_path(component.name),
             created_by=created_by
         )
+
+    @staticmethod
+    def to_detail(component: Component) -> ComponentDetailVue:
+        """Component -> ComponentDetailVue
+
+        Args:
+            component (Component): _description_
+
+        Returns:
+            ComponentDetailVue: 注意: typescriptで<script>タグが書かれていると動かない
+        """
+        content = component.component_content
+        template_section = re.search(
+            r'<template>(.*?)<\/template>', content, re.DOTALL)
+        script_section = re.search(
+            r'<script[^>]*>(.*?)<\/script>', content, re.DOTALL)
+        style_section = re.search(
+            r'<style[^>]*>(.*?)<\/style>', content, re.DOTALL)
+
+        template_content = template_section.group(
+            1).strip() if template_section else ''
+        script_content = script_section.group(
+            1).strip() if script_section else ''
+        style_content = style_section.group(1).strip() if style_section else ''
+        return ComponentDetailVue(file_name=component.name, document=component.document, template=template_content, script=script_content, style=style_content)

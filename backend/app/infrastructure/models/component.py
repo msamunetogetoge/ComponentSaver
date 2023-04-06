@@ -14,7 +14,7 @@ class ComponentModel(Base):
     __tablename__ = "components"
 
     id: int = Column(Integer, primary_key=True, index=True)
-    name: str = Column(String, index=True)
+    name: str = Column(String, index=True, unique=True)
     document: str = Column(String)
     file_path: str = Column(String)
     created_by: int = Column(Integer, default=0)
